@@ -154,4 +154,20 @@ class AmortizeTest extends TestCase
     
         $this->assertLessThan($term, count($months)); // we should be paying the loan back over a shorter term now
     }
+    
+    public function testArrayOfMonthsCanBeJsonSerialized()
+    {
+        $principal = 1000000;
+        $term = 12 * 5; // 5 years
+    
+        $this->a->setInterestRate(3.5);
+        $this->a->setPrincipal($principal);
+        $this->a->setTerm($term);
+        $months = $this->a->getBreakdownByMonth();
+        
+        $serialized = json_encode($months);
+        
+        $this->assertIsString($serialized);
+        $this->assertJson($serialized);
+    }
 }

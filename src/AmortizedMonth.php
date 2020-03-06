@@ -2,8 +2,9 @@
 namespace CodeSmithTech\Amortize;
 
 use DateTime;
+use JsonSerializable;
 
-class AmortizedMonth
+class AmortizedMonth implements JsonSerializable
 {
     /**
      * @var float
@@ -99,5 +100,20 @@ class AmortizedMonth
     private function addOverpayment(Overpayment $overpayment)
     {
         $this->overpayments[] = $overpayment;
+    }
+    
+    /**
+     * @inheritDoc
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'interestDue' => $this->interestDue,
+            'principalDue' => $this->principalDue,
+            'openingBalance' => $this->openingBalance,
+            'closingBalance' => $this->closingBalance,
+            'overpayments'   => $this->overpayments,
+            'date' => $this->date->format('Y-m-d'),
+        ];
     }
 }

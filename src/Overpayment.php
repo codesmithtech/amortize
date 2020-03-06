@@ -3,7 +3,7 @@ namespace CodeSmithTech\Amortize;
 
 use InvalidArgumentException;
 
-class Overpayment
+class Overpayment implements \JsonSerializable
 {
     const REDUCE_LOAN_TERM = 'REDUCE_LOAN_TERM';
     const REDUCE_MONTHLY_PAYMENT = 'REDUCE_MONTHLY_PAYMENT';
@@ -65,6 +65,17 @@ class Overpayment
         return [
             self::REDUCE_LOAN_TERM => 'Reduce loan term',
             self::REDUCE_MONTHLY_PAYMENT => 'Reduce monthly payment',
+        ];
+    }
+    
+    /**
+     * @inheritDoc
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'amount' => $this->amount,
+            'effectOnLoan' => $this->effect,
         ];
     }
 }
