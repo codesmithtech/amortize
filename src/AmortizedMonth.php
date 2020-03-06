@@ -1,7 +1,9 @@
 <?php
 namespace CodeSmithTech\Amortize;
 
-class AmortizedMonth 
+use DateTime;
+
+class AmortizedMonth
 {
     /**
      * @var float
@@ -19,9 +21,9 @@ class AmortizedMonth
     private $overpayments = [];
     
     /**
-     * @var int
+     * @var DateTime
      */
-    private $paymentNumber;
+    private $date;
     
     /**
      * @var float
@@ -34,13 +36,13 @@ class AmortizedMonth
     private $closingBalance;
     
     /**
-     * @param int $paymentNumber
+     * @param DateTime $date
      * @param float $principalDue
      * @param float $interestDue
      */
-    public function __construct(int $paymentNumber, float $principalDue, float $interestDue)
+    public function __construct(DateTime $date, float $principalDue = 0.0, float $interestDue = 0.0)
     {
-        $this->paymentNumber = $paymentNumber;
+        $this->date = $date;
         $this->principalDue = $principalDue;
         $this->interestDue = $interestDue;
     }

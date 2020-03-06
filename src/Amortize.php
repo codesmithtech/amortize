@@ -1,7 +1,11 @@
 <?php
 namespace CodeSmithTech\Amortize;
 
-class Amortize 
+use DateInterval;
+use DateTime;
+use Exception;
+
+class Amortize
 {
     /**
      * @var int
@@ -23,6 +27,16 @@ class Amortize
      */
     private $overpayments = [];
     
+    /**
+     * @var DateTime
+     */
+    private $startDate;
+    
+    public function __construct(DateTime $startDate = null)
+    {
+        $this->startDate = $startDate ?? new DateTime(date('Y-m-01'));
+    }
+    
     public function setInterestRate(float $interestRate): Amortize
     {
         $this->interestRate = $interestRate;
@@ -41,15 +55,16 @@ class Amortize
         return $this;
     }
     
-    public function addOverpayment(int $month, Overpayment $overpayment)
+    public function addOverpayment(int $month, Overpayment $overpayment): Amortize
     {
         $this->overpayments[$month][] = $overpayment;
         return $this;
     }
     
     /**
-     * The formula for calculating the compound interest used in this calculation is described at the following URL
-     * @link https://www.vertex42.com/ExcelArticles/amortization-calculation.html
+     * Calculate the total amount due over the term of the loan
+     * @return float
+     * @throws Exception
      */
     public function totalAmountDueOverTerm(): float
     {
@@ -66,6 +81,7 @@ class Amortize
     
     /**
      * @return array|AmortizedMonth[]
+     * @throws Exception
      */
     public function getBreakdownByMonth(): array
     {
@@ -75,6 +91,8 @@ class Amortize
         $balance = $this->principal;
         
         $i = 0;
+        $interval = new DateInterval('P1M');
+        $currentMonth = clone $this->startDate;
         
         while ($balance > 0.0) {
             $i++;
@@ -89,7 +107,7 @@ class Amortize
             
             $overpayments = $this->overpayments[$i] ?? [];
             
-            $month = new AmortizedMonth($i, $principal, $interest);
+            $month = new AmortizedMonth($currentMonth->add($interval), $principal, $interest);
             $month->setOpeningBalance($balance);
             $month->setOverpayments($overpayments);
             $months[] = $month;
