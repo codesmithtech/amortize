@@ -44,8 +44,8 @@ class AmortizedMonth implements JsonSerializable
     public function __construct(DateTime $date, float $principalDue = 0.0, float $interestDue = 0.0)
     {
         $this->date = $date;
-        $this->principalDue = $principalDue;
-        $this->interestDue = $interestDue;
+        $this->principalDue = round($principalDue, 2);
+        $this->interestDue = round($interestDue, 2);
     }
     
     public function getTotalAmountDue(): float
@@ -69,9 +69,9 @@ class AmortizedMonth implements JsonSerializable
      */
     public function getTotalOverpayments(): float
     {
-        return array_reduce($this->overpayments, function(float $carry, Overpayment $overpayment) {
+        return round(array_reduce($this->overpayments, function(float $carry, Overpayment $overpayment) {
             return $carry + $overpayment->getAmount();
-        }, 0.0);
+        }, 0.0), 2);
     }
     
     /**
