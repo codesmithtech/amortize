@@ -108,10 +108,10 @@ class AmortizedMonth implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'interestDue' => $this->interestDue,
-            'principalDue' => $this->principalDue,
-            'openingBalance' => $this->openingBalance,
-            'closingBalance' => $this->closingBalance,
+            'interestDue' => round($this->interestDue, 2),
+            'principalDue' => round($this->principalDue, 2),
+            'openingBalance' => round($this->openingBalance, 2),
+            'closingBalance' => round($this->closingBalance, 2),
             'overpayments'   => $this->overpayments,
             'date' => $this->date->format('Y-m-d'),
         ];
