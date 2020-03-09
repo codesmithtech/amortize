@@ -107,7 +107,7 @@ class Amortize
             
             $overpayments = $this->overpayments[$i] ?? [];
             
-            $month = new AmortizedMonth($currentMonth->add($interval), $principal, $interest);
+            $month = new AmortizedMonth(clone $currentMonth->add($interval), $principal, $interest);
             $month->setOpeningBalance($balance);
             $month->setOverpayments($overpayments);
             $months[] = $month;
