@@ -55,9 +55,9 @@ class Amortize
         return $this;
     }
     
-    public function addOverpayment(int $month, Overpayment $overpayment): Amortize
+    public function addOverpayment(string $yearAndMonth, Overpayment $overpayment): Amortize
     {
-        $this->overpayments[$month][] = $overpayment;
+        $this->overpayments[$yearAndMonth][] = $overpayment;
         return $this;
     }
     
@@ -104,10 +104,12 @@ class Amortize
             } else {
                 $principal = $monthlyPayment - $interest;
             }
+    
+            $monthDate = clone $currentMonth->add($interval);
+//            echo $monthDate->format('Y-m') . PHP_EOL;
+            $overpayments = $this->overpayments[$monthDate->format('Y-m')] ?? [];
             
-            $overpayments = $this->overpayments[$i] ?? [];
-            
-            $month = new AmortizedMonth(clone $currentMonth->add($interval), $principal, $interest);
+            $month = new AmortizedMonth($monthDate, $principal, $interest);
             $month->setOpeningBalance($balance);
             $month->setOverpayments($overpayments);
             $months[] = $month;

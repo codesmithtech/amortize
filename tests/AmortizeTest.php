@@ -15,7 +15,7 @@ class AmortizeTest extends TestCase
     
     public function setUp(): void
     {
-        $this->a = new Amortize();
+        $this->a = new Amortize(new \DateTime(20200101));
     }
     
     public function testAmountOwedIsEqualToAmountBorrowedWhenZeroInterestRate()
@@ -117,7 +117,7 @@ class AmortizeTest extends TestCase
         $this->assertSame($withNoOverpayment, $this->a->totalAmountDueOverTerm());
         
         // add an overpayment in month 12
-        $this->a->addOverpayment(12, new Overpayment(5000.0, Overpayment::REDUCE_MONTHLY_PAYMENT));
+        $this->a->addOverpayment('2020-03', new Overpayment(5000.0, Overpayment::REDUCE_MONTHLY_PAYMENT));
         $this->assertLessThan($withNoOverpayment, $this->a->totalAmountDueOverTerm());
     }
     
@@ -130,13 +130,13 @@ class AmortizeTest extends TestCase
         $this->a->setPrincipal($principal);
         $this->a->setTerm($term);
         
-        $this->a->addOverpayment(3, new Overpayment(10000.0, Overpayment::REDUCE_MONTHLY_PAYMENT));
+        $this->a->addOverpayment('2020-05', new Overpayment(10000.0, Overpayment::REDUCE_MONTHLY_PAYMENT));
         
         $months = $this->a->getBreakdownByMonth();
         
         $this->assertSame($term, count($months)); // ensure we still have a 5 year term
         $this->assertSame($months[0]->getTotalAmountDue(), $months[1]->getTotalAmountDue());
-        $this->assertLessThan($months[1]->getTotalAmountDue(), $months[3]->getTotalAmountDue());
+        $this->assertLessThan($months[1]->getTotalAmountDue(), $months[6]->getTotalAmountDue());
     }
     
     public function testOverpaymentReducesTheNumberOfMonthsRepaymentsContinueFor()
@@ -148,7 +148,7 @@ class AmortizeTest extends TestCase
         $this->a->setPrincipal($principal);
         $this->a->setTerm($term);
     
-        $this->a->addOverpayment(3, new Overpayment(100000.0, Overpayment::REDUCE_LOAN_TERM));
+        $this->a->addOverpayment('2020-07', new Overpayment(100000.0, Overpayment::REDUCE_LOAN_TERM));
     
         $months = $this->a->getBreakdownByMonth();
     
