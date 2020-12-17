@@ -6,6 +6,12 @@ Amortize calculates the amortization of loans over their term, taking care of th
 * Calculate total repayable over the term of the loan
 * Add overpayments part way through the term and have the loan term shortened, or the monthly payment recalculated and reduced for the remainder of the term
 
+Install
+
+```
+composer require codesmithtech/amortize
+```
+
 Usage
 
 ```
